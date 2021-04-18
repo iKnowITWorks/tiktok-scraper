@@ -1,3 +1,5 @@
+import { SocksProxyAgent } from 'socks-proxy-agent';
+
 export type ScrapeType =
     | 'user'
     | 'hashtag'
@@ -8,107 +10,158 @@ export type ScrapeType =
     | 'discover_music'
     | 'single_user'
     | 'single_hashtag'
+    | 'single_music'
     | 'signature'
-    | 'video_meta';
+    | 'video_meta'
+    | 'video';
+
+export interface Proxy {
+    socks: boolean;
+    proxy: string | SocksProxyAgent;
+}
 
 export interface Options {
-    proxy?: string;
+    proxy?: string[] | string;
+    sessionList?: string[];
+    proxyFile?: string;
+    sessionFile?: string;
     event?: boolean;
     by_user_id?: boolean;
     download?: boolean;
+    bulk?: boolean;
+    cli?: boolean;
+    asyncBulk?: number;
     asyncDownload?: number;
     asyncScraping?: number;
     filepath?: string;
     filetype?: string;
     progress?: boolean;
     number?: number;
-    userAgent?: string;
     noWaterMark?: boolean;
     remove?: string;
     fileName?: string;
     historyPath?: string;
+    timeout?: number;
+    hdVideo?: boolean;
+    randomUa?: boolean;
+    webHookUrl?: string;
+    method?: string;
+    headers?: Headers;
+    verifyFp?: string;
 }
 export interface TikTokConstructor {
     download: boolean;
     filepath: string;
     filetype: string;
-    proxy: string;
+    proxy: string[] | string;
     asyncDownload: number;
     asyncScraping: number;
     cli?: boolean;
+    zip?: boolean;
     event?: boolean;
     progress?: boolean;
+    bulk?: boolean;
     input: string;
     number: number;
     type: ScrapeType;
     by_user_id?: boolean;
     store_history?: boolean;
     historyPath?: string;
-    userAgent: string;
-    test?: boolean;
     noWaterMark?: boolean;
     fileName?: string;
+    timeout?: number;
+    test?: boolean;
+    hdVideo?: boolean;
+    signature?: string;
+    webHookUrl?: string;
+    method?: string;
+    headers: Headers;
+    verifyFp?: string;
+    sessionList?: string[];
 }
 
 export interface Hashtags {
     id: string;
     name: string;
     title: string;
-    cover: string[];
+    cover: string[] | string;
+}
+
+export interface DuetInfo {
+    duetFromId: string;
 }
 
 export interface PostCollector {
     id: string;
+    secretID: string;
     text: string;
     createTime: number;
     authorMeta: {
         id: string;
+        secUid: string;
         name: string;
         nickName: string;
-        following: number;
-        fans: number;
-        heart: number;
-        video: number;
-        digg: number;
+        following?: number;
+        fans?: number;
+        heart?: number;
+        video?: number;
+        digg?: number;
         verified: boolean;
-        private: boolean;
+        private?: boolean;
         signature: string;
         avatar: string;
     };
-    musicMeta: {
+    musicMeta?: {
         musicId: string;
         musicName: string;
         musicAuthor: string;
         musicOriginal: boolean;
+        musicAlbum: string;
         playUrl: string;
+        coverThumb?: string;
+        coverMedium?: string;
+        coverLarge?: string;
+        duration?: number;
     };
     covers: {
         default: string;
         origin: string;
         dynamic: string;
     };
-    imageUrl: string;
+    imageUrl?: string;
     webVideoUrl?: string;
     videoUrl: string;
-    videoUrlNoWaterMark: string;
+    videoUrlNoWaterMark?: string;
+    videoApiUrlNoWaterMark?: string;
     videoMeta: {
         width: number;
         height: number;
-        ratio: number;
+        ratio?: string;
         duration: number;
+        duetEnabled?: boolean;
+        stitchEnabled?: boolean;
+        duetInfo?: DuetInfo;
     };
     diggCount: number;
     shareCount: number;
     playCount: number;
     commentCount: number;
+    mentions: string[] | null;
     hashtags: Hashtags[];
     repeated?: boolean;
     downloaded: boolean;
 }
 
 export interface Result {
+    headers: Headers;
     collector: PostCollector[];
     zip?: string;
     json?: string;
     csv?: string;
+}
+
+export interface Headers {
+    'user-agent': string;
+    referer?: string;
+    cookie?: string;
 }
